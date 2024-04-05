@@ -1,0 +1,49 @@
+{
+  "node_modules/chart.js/dist/chart.js?commonjs-entry": {
+    "file": "assets/chart.28bbe8e1.js",
+    "src": "node_modules/chart.js/dist/chart.js?commonjs-entry",
+    "isEntry": true,
+    "imports": [
+      "__commonjsHelpers.b8add541.js"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app.4d15fd5d.js",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "__commonjsHelpers.b8add541.js"
+    ]
+  },
+  "resources/js/imports.js": {
+    "file": "assets/imports.80057913.js",
+    "src": "resources/js/imports.js",
+    "isEntry": true,
+    "imports": [
+      "__commonjsHelpers.b8add541.js"
+    ]
+  },
+  "resources/js/init-alpine.js": {
+    "file": "assets/init-alpine.b7c6cd4d.js",
+    "src": "resources/js/init-alpine.js",
+    "isEntry": true
+  },
+  "__commonjsHelpers.b8add541.js": {
+    "file": "assets/_commonjsHelpers.b8add541.js"
+  },
+  "node_modules/fullcalendar/main.css": {
+    "file": "assets/main.1fe7ef42.css",
+    "src": "node_modules/fullcalendar/main.css",
+    "isEntry": true
+  },
+  "resources/css/styles.scss": {
+    "file": "assets/styles.8cdd51a1.css",
+    "src": "resources/css/styles.scss",
+    "isEntry": true
+  },
+  "resources/css/app.css": {
+    "file": "assets/app.2a590cea.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  }
+}
