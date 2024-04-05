@@ -1,0 +1,126 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import "mfb/src/mfb.css";
+@import "flatpickr/dist/flatpickr.min.css";
+@import "select2/dist/css/select2.css";
+@import "select2Fix.css";
+@import "animate.css/animate.css";
+@import '#/dropzone/dist/dropzone.css';
+
+/*
+Remove popping buttons on page load
+ */
+.ds-btn {
+    -webkit-animation: unset!important;
+    animation:unset!important;
+}
+/*
+Center icons on FAB
+ */
+.mfb-component__button, .mfb-component__button--main, .mfb-component__button--child{
+    padding: 15px;
+}
+/*
+Disable animation on FAB
+ */
+.mfb-component__main-icon--active, .mfb-component__main-icon--resting {
+    transform: unset!important;
+}
+[data-mfb-label]:after{
+    opacity: 1!important;
+}
+.mfb-component__button, .mfb-component__button--main, .mfb-component__button--child{
+    background-color: hsla(var(--p) / var(--tw-bg-opacity))!important;
+}
+
+/*
+Used in ez multi select
+ */
+.ez-outline{
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px hsl(var(--b1)),0 0 0 4px hsla(var(--bc)/.2);
+}
+.ez-multi-select{
+    background-image: linear-gradient(
+        45deg,transparent 50%,currentColor 0),linear-gradient(
+        135deg,currentColor 50%,transparent 0);    background-position: calc(100% - 20px) calc(1px + 50%),calc(100% - 16px) calc(1px + 50%);
+    background-size: 4px 4px,4px 4px;
+    background-repeat: no-repeat;
+}
+
+
+
+.dropzone .dz-preview.dz-image-preview{
+    background: unset;
+}
+
+.dropzone{
+    border: unset !important;
+
+}
+
+.ds-tab.ds-tab-active{
+    @apply border-primary-500
+}
+
+.ds-steps .ds-step:after {
+    height: 1.6rem;
+    width: 1.6rem;
+}
+.ds-steps .ds-step:before{
+    height: 0.3rem;
+}
+/*FIX DROPZONE ERROR CUTOF */
+.dropzone .dz-preview .dz-error-message {
+    top: 66px!important;
+}
+.dropzone .dz-preview.dz-image-preview{
+    background: transparent!important;
+}
+.ds-divider-horizontal {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    height: auto;
+    width: 1rem;
+}
+
+.ds-divider-horizontal {
+    flex-direction: column;
+}
+.ds-divider-horizontal:before {
+    height: 100%;
+    width: 0.125rem;
+}
+
+.ds-divider:before {
+    background-color: hsl(var(--bc)/var(--tw-bg-opacity));
+    --tw-bg-opacity: .1;
+}
+.ds-divider-horizontal:after {
+    height: 100%;
+    width: 0.125rem;
+}
+
+.ds-divider:after {
+    background-color: hsl(var(--bc)/var(--tw-bg-opacity));
+    --tw-bg-opacity: .1;
+}
+.ds-btn{
+    font-weight: 500!important;
+}
+.ds-select-sm {
+
+    line-height: 1rem!important;
+}
+
+
+.ds-alert.ds-alert-warning{
+    background-color: #eca5184a;
+    border: 1px solid #eca518;
+}
+
+
