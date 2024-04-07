@@ -48,6 +48,8 @@ class ValamarOperaApi{
 
     public function syncReservationWithOperaFull($reservation_id,$cf_only = false){
 
+
+
         $this->cf_only = $cf_only;
 
         $this->reservation = Reservation::findOrFail($reservation_id);
@@ -188,7 +190,24 @@ class ValamarOperaApi{
 
            $res_result = $api->getReservationList();
 
+            $res_opera_id = $this->reservation->lead_traveller?->reservation_opera_id;
+
            if(!empty($res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number])){
+
+               if($res_opera_id != $res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number]['OPERA']['RESV_NAME_ID']){
+
+
+                   $traveller = Traveller::findOrFail($this->reservation->GetLeadTravellerAttribute()->id);
+
+                   $traveller->reservation_opera_id = $res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number]['OPERA']['RESV_NAME_ID'];
+
+                   $traveller->save();
+
+                    $this->reservation->refresh();
+
+               }
+
+
                $this->resortPMSCode = $res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number]['propertyOperaCode'];
                return true;
            }
@@ -572,9 +591,8 @@ class ValamarOperaApi{
             }
         }elseif($reservation->isRoundTrip()){
 
+
             $return = array();
-
-
 
             #If main reservation is triggered
             if($reservation->is_main){
