@@ -520,14 +520,17 @@
 
                         <x-input label="Reservation number"
                                  wire:model="stepTwoFields.leadTraveller.reservationNumber"
+                                 readonly
                         ></x-input>
 
                         <x-input label="Reservation Opera ID"
                                  wire:model="stepTwoFields.leadTraveller.reservationOperaID"
+                                 readonly
                         ></x-input>
 
                         <x-input label="Opera Confirmation Number"
                                  wire:model="stepTwoFields.leadTraveller.reservationOperaConfirmation"
+                                 readonly
                         ></x-input>
                         <x-input label="Email"
                                  wire:model="stepTwoFields.leadTraveller.email"
