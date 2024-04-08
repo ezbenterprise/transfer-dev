@@ -555,7 +555,7 @@
                         />
 
                     </div>
-                    <p class="red">These fields can only be populated via Pull Data, and not manually.</p>
+                    <small style="color:red">** These fields can only be populated via Pull Data, and not manually.</small>
                 </x-card>
 
             </div>
