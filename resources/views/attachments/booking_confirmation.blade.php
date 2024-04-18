@@ -62,21 +62,21 @@
                 <tbody>
                 @foreach($reservation->getConfirmationItemBreakdown('items') as $pbItem)
 
-                        <tr style="border: 1px solid black;">
-                            <td style="padding:5px 5px;border: 1px solid black;">{{$loop->index + 1}}.</td>
+                    <tr style="border: 1px solid black;">
+                        <td style="padding:5px 5px;border: 1px solid black;">{{$loop->index + 1}}.</td>
 
-                            <td style="padding:5px 5px;border: 1px solid black;">
-                                {{Arr::get($pbItem,'code')}}
-                            </td>
-                            <td style="padding:5px 5px;border: 1px solid black;">{{Arr::get($pbItem,'transfer')}}</td>
-                            <td style="padding:5px 5px;border: 1px solid black;text-align: right">
+                        <td style="padding:5px 5px;border: 1px solid black;">
+                            {{Arr::get($pbItem,'code')}}
+                        </td>
+                        <td style="padding:5px 5px;border: 1px solid black;">{{Arr::get($pbItem,'transfer')}}</td>
+                        <td style="padding:5px 5px;border: 1px solid black;text-align: right">
 
                             @if($reservation->included_in_accommodation_reservation == 0 && $reservation->v_level_reservation == 0)
                                 <b>{{Arr::get($pbItem,'price')}}</b></td>
-                            @else
-                                <b>0,00 €</b>
-                            @endif
-                        </tr>
+                        @else
+                            <b>0,00 €</b>
+                        @endif
+                    </tr>
 
                 @endforeach
 
@@ -96,56 +96,68 @@
 
                     </td>
                 </tr>
-{{--                <tr>--}}
-{{--                    <td colspan="3" style="border: 1px solid black; text-align: right;padding:5px 5px">--}}
-{{--                        <b>{{__('mail.total_hrk')}}: </b>--}}
-{{--                    </td>--}}
-{{--                    <td style="border: 1px solid black;text-align: right;padding:5px 5px">--}}
-{{--                        @if($reservation->included_in_accommodation_reservation == 0 && $reservation->v_level_reservation == 0)--}}
-{{--                            <b>{{$reservation->getConfirmationItemBreakdown('items_total_hrk')}}</b>--}}
-{{--                        @else--}}
-{{--                            <b>0,00</b>--}}
-{{--                        @endif--}}
-{{--                    </td>--}}
-{{--                </tr>--}}
+                {{--                <tr>--}}
+                {{--                    <td colspan="3" style="border: 1px solid black; text-align: right;padding:5px 5px">--}}
+                {{--                        <b>{{__('mail.total_hrk')}}: </b>--}}
+                {{--                    </td>--}}
+                {{--                    <td style="border: 1px solid black;text-align: right;padding:5px 5px">--}}
+                {{--                        @if($reservation->included_in_accommodation_reservation == 0 && $reservation->v_level_reservation == 0)--}}
+                {{--                            <b>{{$reservation->getConfirmationItemBreakdown('items_total_hrk')}}</b>--}}
+                {{--                        @else--}}
+                {{--                            <b>0,00</b>--}}
+                {{--                        @endif--}}
+                {{--                    </td>--}}
+                {{--                </tr>--}}
 
 
                 </tfoot>
 
             </table>
 
-{{--            <p style="float: right;font-style: italic;font-size:10px;padding:2px">{{__('mail.price_info')}}</p>--}}
+            {{--            <p style="float: right;font-style: italic;font-size:10px;padding:2px">{{__('mail.price_info')}}</p>--}}
 
-
+            @if(\Arr::get($reservation->transfer_price_state,'price_data.tax_level') == 'PPOM')
+                <div align="left">
+                    <br/><p style="font-style: italic;font-size: 13px !important"> * Posebni postupak oporezivanja putničkih agencija sukladno čl. 91. Zakona o PDV-u</p>
+                </div>
+            @endif
         </x-mail.row>
 
         <div class="" style="padding-top: 40px;"></div>
 
         <x-mail.row>
-
-            @if(\Arr::get($reservation->transfer_price_state,'price_data.tax_level') == 'PPOM')
-                <br/><p style="float: right;font-style: italic;font-size: 13px !important"> * Posebni postupak oporezivanja putničkih agencija sukladno čl. 91. Zakona o PDV-u</p>
-            @endif
-            <div align="center" style="font-size: 13px !important">
-                <!-- Issue Location -->
-                <br/>
-                <p><b>Issue Location:</b> {{$reservation->getAccommodationData('name')}}</p>
-                <!-- Issue Date and Time -->
-                <p><b>Issue Date and Time:</b>  {{\Carbon\Carbon::parse($reservation->created_at->format('d.m.Y H:i'))->format('d.m.Y H:i')}}</p>
-                <!-- Operator -->
-                <p><b>Operator:</b> {{$reservation->getOperatorName()}}</p>
-
-                <!-- ZKI -->
-                @if($reservation->getInvoiceData('zki','reservation'))
-                    <p><b>ZKI:</b> {{$reservation->getInvoiceData('zki','reservation')}}</p>
-                @endif
-
-                <!-- Jir -->
-                @if($reservation->getInvoiceData('jir'))
-                    <p><b>JIR:</b> {{$reservation->getInvoiceData('jir','reservation')}}</p>
-                @endif
-                <p><b>Accommodation:</b> {{$reservation->getAccommodationData('name')}}</p>
-
+            <div align="left" style="font-size: 13px !important;margin-left:20%">
+                <table>
+                    <tr>
+                        <td align="right"><b>Issue Location:</b></td>
+                        <td style="padding: 0 10px;">{{$reservation->getAccommodationData('name')}}</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>Issue Date and Time:</b></td>
+                        <td style="padding: 0 10px;">{{\Carbon\Carbon::parse($reservation->created_at->format('d.m.Y H:i'))->format('d.m.Y H:i')}}</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>Operator:</b></td>
+                        <td style="padding: 0 10px;">{{$reservation->getOperatorName()}}</td>
+                    </tr>
+                    @if($reservation->getInvoiceData('zki','reservation'))
+                        <tr>
+                            <td align="right"><b>ZKI:</b></td>
+                            <td style="padding: 0 10px;">{{$reservation->getInvoiceData('zki','reservation')}}</td>
+                        </tr>
+                    @endif
+                    <!-- Jir -->
+                    @if($reservation->getInvoiceData('jir'))
+                        <tr>
+                            <td align="right"><b>JIR:</b></td>
+                            <td style="padding: 0 10px;">{{$reservation->getInvoiceData('jir','reservation')}}</td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <td align="right"><b>Accommodation:</b></td>
+                        <td style="padding: 0 10px;">{{$reservation->getAccommodationData('name')}}</td>
+                    </tr>
+                </table>
             </div>
 
 
