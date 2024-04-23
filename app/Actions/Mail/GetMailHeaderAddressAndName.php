@@ -40,17 +40,13 @@ class GetMailHeaderAddressAndName
                 break;
             case 2:
                 $header = "Valamar Riviera d.d<br/>
+
                     Stancija Kaligari 1<br/>
                     Poreč, Republika Hrvatska<br/>
                    <br/>
                    OIB: 36201212847
                    <br/>
-                   <i>On behalf of and for the account</i><br/>
-                   Imperial Riviera<br/>
-                   Jurja Barakovića 2<br/>
-                   Rab, Republika Hrvatska<br/>
-                   OIB: 90896496260<br/>
-                   IBAN: HR8124020061100210497";
+                   IBAN: HR4123600001101319202<br/>";
 
                 switch(app()->getLocale()){
                     case 'it':

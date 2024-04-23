@@ -71,7 +71,7 @@
     <x-mail.body>
 
         <x-mail.logo>
-            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:10px !important">
+            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:12px !important">
                 <p style="width: 100%">
                     {!! \App\Actions\Mail\GetMailHeaderAddressAndName::run($reservation) !!}
                     <br/>
