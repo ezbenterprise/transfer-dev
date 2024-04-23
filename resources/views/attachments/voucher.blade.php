@@ -117,8 +117,8 @@
             @endif
 
             @if($reservation->status == 'confirmed' && $reservation->returnReservation && $reservation->returnReservation->status == 'confirmed')
-                <p style="margin-top: 20px;">{!! __('mail.please_note_round_trip') !!}</p>
-                <br>
+                                <p style="margin-top: 20px;">{!! __('mail.please_note_round_trip') !!}</p>
+                                <br>
             @endif
             @if($reservation->returnReservation && $reservation->returnReservation->status == 'confirmed')
 

@@ -1,5 +1,55 @@
 @section('max_w','780px')
+<?php
+    $locale = app()->getLocale();
 
+    $res_type = $reservation->isRoundTrip() ? '2' : '1';
+
+    $locale_configuration = array(
+        'hr' => array(
+            1 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 80
+            ),
+            2 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 37
+            )
+        ),
+        'en' => array(
+            1 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 80
+            ),
+            2 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 37
+            )
+        ),
+        'de' => array(
+            1 => array(
+                'footer-font-size' => 6,
+                'footer-upper-padding' => 50
+            ),
+            2 => array(
+                'footer-font-size' => 6,
+                'footer-upper-padding' => 3
+            )
+        ),
+        'it' => array(
+            1 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 50
+            ),
+            2 => array(
+                'footer-font-size' => 6,
+                'footer-upper-padding' => 19
+            )
+        )
+    );
+
+
+
+?>
 <x-mail.layouts.main>
 
     <x-slot name="head_after">
@@ -21,7 +71,7 @@
     <x-mail.body>
 
         <x-mail.logo>
-            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%">
+            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:12px">
                 <p style="width: 100%">
                     {!! \App\Actions\Mail\GetMailHeaderAddressAndName::run($reservation) !!}
                     <br/>
@@ -35,7 +85,7 @@
 
         <x-mail.row>
             <div class="" style="padding: 3px 0 0 0; text-align: right ;width: 100%; margin-bottom: 25px">
-                <p style="width: 100%;font-size: 13px !important">
+                <p style="width: 100%;font-size: 12px !important">
                     <b>{{__('mail.transfer_reservation_confirmation')}}:</b> {{gmdate('Y').'-'.$reservation->getInvoiceData('invoice_number','reservation')}}
                     <br/>
                     <b>{{__('mail.accommodation_reservation_holder')}}:</b> {{$reservation->lead_traveller->full_name}}
@@ -52,9 +102,9 @@
             <table style="  border-collapse: unset ;border: 1px solid #363636; width: 100%;font-size: 11px;table-layout: fixed">
                 <thead>
                 <tr style="border: 1px solid black;font-weight: 700;">
-                    <td style="border: 1px solid black;padding:5px 5px;" width="8%"  >{{__('mail.no')}}</td>
+                    <td style="border: 1px solid black;padding:5px 5px;" width="15%">{{__('mail.no')}}</td>
                     <td style="padding:5px 5px;border: 1px solid black;" width="8%">{{__('mail.code')}}</td>
-                    <td style="padding:5px 5px;border: 1px solid black;" width="42%">{{__('mail.service_name')}}</td>
+                    <td style="padding:5px 5px;border: 1px solid black;" width="36%">{{__('mail.service_name')}}</td>
                     <td style="padding:5px 5px;border: 1px solid black;text-align: right" width="40%">{{__('mail.total')}}</td>
                 </tr>
                 </thead>
@@ -62,21 +112,21 @@
                 <tbody>
                 @foreach($reservation->getConfirmationItemBreakdown('items') as $pbItem)
 
-                    <tr style="border: 1px solid black;">
-                        <td style="padding:5px 5px;border: 1px solid black;">{{$loop->index + 1}}.</td>
+                        <tr style="border: 1px solid black;">
+                            <td style="padding:5px 5px;border: 1px solid black;">{{$loop->index + 1}}.</td>
 
-                        <td style="padding:5px 5px;border: 1px solid black;">
-                            {{Arr::get($pbItem,'code')}}
-                        </td>
-                        <td style="padding:5px 5px;border: 1px solid black;">{{Arr::get($pbItem,'transfer')}}</td>
-                        <td style="padding:5px 5px;border: 1px solid black;text-align: right">
+                            <td style="padding:5px 5px;border: 1px solid black;">
+                                {{Arr::get($pbItem,'code')}}
+                            </td>
+                            <td style="padding:5px 5px;border: 1px solid black;">{{Arr::get($pbItem,'transfer')}}</td>
+                            <td style="padding:5px 5px;border: 1px solid black;text-align: right">
 
                             @if($reservation->included_in_accommodation_reservation == 0 && $reservation->v_level_reservation == 0)
                                 <b>{{Arr::get($pbItem,'price')}}</b></td>
-                        @else
-                            <b>0,00 €</b>
-                        @endif
-                    </tr>
+                            @else
+                                <b>0,00 €</b>
+                            @endif
+                        </tr>
 
                 @endforeach
 
@@ -96,48 +146,28 @@
 
                     </td>
                 </tr>
-                {{--                <tr>--}}
-                {{--                    <td colspan="3" style="border: 1px solid black; text-align: right;padding:5px 5px">--}}
-                {{--                        <b>{{__('mail.total_hrk')}}: </b>--}}
-                {{--                    </td>--}}
-                {{--                    <td style="border: 1px solid black;text-align: right;padding:5px 5px">--}}
-                {{--                        @if($reservation->included_in_accommodation_reservation == 0 && $reservation->v_level_reservation == 0)--}}
-                {{--                            <b>{{$reservation->getConfirmationItemBreakdown('items_total_hrk')}}</b>--}}
-                {{--                        @else--}}
-                {{--                            <b>0,00</b>--}}
-                {{--                        @endif--}}
-                {{--                    </td>--}}
-                {{--                </tr>--}}
-
-
                 </tfoot>
 
             </table>
 
-            {{--            <p style="float: right;font-style: italic;font-size:10px;padding:2px">{{__('mail.price_info')}}</p>--}}
-
             @if(\Arr::get($reservation->transfer_price_state,'price_data.tax_level') == 'PPOM')
                 <div align="left">
-                    <br/><p style="font-style: italic;font-size: 13px !important"> * Posebni postupak oporezivanja putničkih agencija sukladno čl. 91. Zakona o PDV-u</p>
+                    <p style="font-style: italic;font-size: 11px !important">* {{__('mail.special_taxing')}} </p>
                 </div>
             @endif
         </x-mail.row>
 
-        <div class="" style="padding-top: 40px;"></div>
+        <div class="" style="padding-top: 20px;"></div>
 
         <x-mail.row>
-            <div align="left" style="font-size: 13px !important;margin-left:20%">
-                <table>
+            <div style="font-size: 11px !important;">
+                <table align="center">
                     <tr>
-                        <td align="right"><b>Issue Location:</b></td>
+                        <td align="right"><b>{{__('mail.issue_location')}}:</b></td>
                         <td style="padding: 0 10px;">{{$reservation->getAccommodationData('name')}}</td>
                     </tr>
                     <tr>
-                        <td align="right"><b>Issue Date and Time:</b></td>
-                        <td style="padding: 0 10px;">{{\Carbon\Carbon::parse($reservation->created_at->format('d.m.Y H:i'))->format('d.m.Y H:i')}}</td>
-                    </tr>
-                    <tr>
-                        <td align="right"><b>Operator:</b></td>
+                        <td align="right"><b>{{__('mail.operator')}}:</b></td>
                         <td style="padding: 0 10px;">{{$reservation->getOperatorName()}}</td>
                     </tr>
                     @if($reservation->getInvoiceData('zki','reservation'))
@@ -154,30 +184,38 @@
                         </tr>
                     @endif
                     <tr>
-                        <td align="right"><b>Accommodation:</b></td>
+                        <td align="right"><b>{{__('mail.voucher_number')}}:</b></td>
+                        <td style="padding: 0 10px;">{{$reservation->id}}</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>{{__('mail.issue_date_and_time')}}:</b></td>
+                        <td style="padding: 0 10px;">{{\Carbon\Carbon::parse($reservation->created_at->format('d.m.Y H:i'))->format('d.m.Y H:i')}}</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>{{__('mail.accommodation')}}:</b></td>
                         <td style="padding: 0 10px;">{{$reservation->getAccommodationData('name')}}</td>
                     </tr>
                 </table>
             </div>
-
-
-            <div class="" style="padding-top: 20px;"></div>
-            <p style="font-size: 13px !important"><b>{{__('mail.terms_and_conditions')}}</b></p>
-            <br>
-            <p style="font-size: 13px !important">{{__('mail.booking_confirmation.terms_and_conditions')}}</p>
-            <div class="" style="padding-bottom: 20px;"></div>
         </x-mail.row>
 
-        <x-mail.footer style="position: fixed;bottom:0 !important;">
+        <x-mail.row>
+            <!-- Terms and Conditions -->
+            <div class="" style="padding-top: 30px;"></div>
+            <p style="font-size: 12px !important"><b>{{__('mail.terms_and_conditions')}}</b></p>
+            <br>
+            <p style="font-size: 11px !important">{{__('mail.booking_confirmation.terms_and_conditions')}}</p>
+        </x-mail.row>
+        <x-mail.footer>
             {{__('mail.valamar_transfer_service')}}<br>
             {{html_entity_decode(__('mail.not_fiscalized'))}}
-            <div class="" style="padding-top: 20px;"></div>
+            <div class="" style="padding-top: {{ $locale_configuration[$locale][$res_type]['footer-upper-padding'] }}px;"></div>
             <x-mail.footer-below>
 
 
-                <div style="position: relative; bottom: 0">
+                <div style="position: relative;">
 
-                    <p style="text-align: justify; font-size: 8px">
+                    <p style="text-align: justify; font-size: {{ $locale_configuration[$locale][$res_type]['footer-font-size'] }}px">
 
                         <!-- Valamar Riviera Footer -->
                         @if($reservation->destination->owner_id == 1)
@@ -196,12 +234,69 @@
                     </p>
                 </div>
             </x-mail.footer-below>
+            <div class="" style="padding-top: 10px;"></div>
         </x-mail.footer>
+        <x-mail.logo>
+            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:12px">
+                <p style="width: 100%">
+                    {!! \App\Actions\Mail\GetMailHeaderAddressAndName::run($reservation) !!}
+                    <br/>
+                    E-mail: reservations@valamar.com
+                </p>
+
+            </div>
+            <div class="" style="padding-top: 20px;"></div>
+        </x-mail.logo>
+
+        <x-mail.row>
+            <div class="" style="padding-top: 20px;"></div>
+            <p style="font-size: 11px !important"><b>{{__('mail.gdpr_title')}}:</b></p>
+            <br>
+            <ul style="font-size: 11px !important;  list-style-type: circle;" >
+                <li style="margin-left:2%">{{__('mail.gdpr_1')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_2')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_3')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_4')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_5')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_6')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_7')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_8')}}</li>
+                <li style="margin-left:2%">{{__('mail.gdpr_9')}}</li>
+
+            </ul>
+            <div class="" style="padding-bottom: 20px;"></div>
+        </x-mail.row>
+        <x-mail.footer_bottom>
+            {{__('mail.valamar_transfer_service')}}<br>
+            {{html_entity_decode(__('mail.not_fiscalized'))}}
+            <div class="" style="padding-top: 20px;"></div>
+            <x-mail.footer-below>
 
 
+                <div style="position: relative;">
+
+                    <p style="text-align: justify; font-size: {{ $locale_configuration[$locale][$res_type]['footer-font-size'] }}px">
+
+                        <!-- Valamar Riviera Footer -->
+                        @if($reservation->destination->owner_id == 1)
+                            {{__('mail.guest.footer.valamar')}}
+                        @endif
+
+                        <!-- Imperial Rab Footer -->
+                        @if($reservation->destination->owner_id == 2)
+                            {{__('mail.guest.footer.imperial')}}
+                        @endif
+
+                        <!-- Helious Faros -->
+                        @if($reservation->destination->owner_id == 3){
+                        {{__('mail.guest.footer.helios_faros')}}
+                        @endif
+                    </p>
+                </div>
+            </x-mail.footer-below>
+        </x-mail.footer_bottom>
     </x-mail.body>
 
-
-
-
 </x-mail.layouts.main>
+
+
