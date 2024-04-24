@@ -556,14 +556,14 @@ class Reservation extends Model
     }
 
     public function saveConfirmationDocument(){
-
+        return true;
         $document_name = 'res_'.$this->id.'_booking_confirmation.pdf';
 
         PDF::loadView('attachments.booking_confirmation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
 
     }
     public function saveCancellationDocument(){
-
+        return true;
         $document_name = 'res_'.$this->id.'_booking_cancellation.pdf';
 
         PDF::loadView('attachments.booking_cancellation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
@@ -571,7 +571,7 @@ class Reservation extends Model
     }
 
     public function saveModificationDocument(){
-
+        return true;
         $document_name = 'res_'.$this->id.'_booking_modification_'.time().'.pdf';
 
         PDF::loadView('attachments.booking_confirmation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
@@ -579,7 +579,7 @@ class Reservation extends Model
     }
 
     public function saveCancellationFeeDocument(){
-
+        return true;
         $document_name = 'res_'.$this->id.'_booking_cancellation_fee.pdf';
 
         PDF::loadView('attachments.booking_cancellation_fee', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
