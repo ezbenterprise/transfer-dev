@@ -166,7 +166,18 @@
                     <x-icon name="document-download" wire:loading.remove wire:target="downloadVoucher({{$reservation->id}})" class="w-4 h-4 ml-2">
                     </x-icon>
                 </button>
-                <br/>
+                <br/><br/>
+                <x-button success xs wire:click="openReservationStatusModal({{$reservation->id}})">View Status Breakdown</x-button>
+
+                @if($reservation->resolved == 1)
+                    <br/>
+                    <small><u><b>Note:</b></u> Reservation Marked as Resolved by: {{$reservation->resolvedBy->name}} at  {{$reservation->resolved_at}}</small>
+                    @if($reservation->resolve_comment != '')
+                     <br/><small><b><u>Comment:</u></b> {{$reservation->resolve_comment}}</small>
+                    @endif
+
+                @endif
+
             </div>
 
             <x-button href="{{route('bookings')}}"><i class="fas fa-angle-left mr-2"></i> Back</x-button>
@@ -284,6 +295,12 @@
             <livewire:issue-reservation-invoice :reservation="$this->reservation"/>
         </x-modal.card>
 
+    @endif
+
+    @if($reservationStatusModal)
+        <x-modal.card wire:model="reservationStatusModal"  title="Reservation Status Breakdown #{{$this->reservation->id}}">
+            <livewire:show-reservation-status  :reservation="$this->reservation" :review="true" />
+        </x-modal.card>
     @endif
 
 </div>
