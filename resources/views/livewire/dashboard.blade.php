@@ -188,7 +188,7 @@
 
                     @if(is_array($reservation))
                         @continue;
-                    @endif;
+                    @endif
 
                     <x-card cardClasses="mb-4 border" title="Transfer #{{$reservation->id}}">
                         <x-slot name="action">
