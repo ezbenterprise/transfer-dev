@@ -68,5 +68,12 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         });
     });
 
+    Route::middleware(
+        ['role:' . User::ROLE_REPORTAGENT]
+    )->group(callback: function () {
+        include 'role-reportagent.php';
+    });
+
+
 });
 
