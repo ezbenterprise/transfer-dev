@@ -61,22 +61,37 @@ Route::get('/agent-efficiency',\App\Http\Livewire\AgentEfficiency::class)->name(
 
 Route::get('/mail-test',function(){
 
-    $reservation = Reservation::findOrFail(163);
+    $reservation_id = 1754;
+    $type = 'booking-confirmation';
 
-    $price = $reservation->price;
+    \App::setLocale('it');
 
-    if($reservation->isRoundTrip && $reservation->returnReservation->status == 'confirmed'){
-        $price = $price*2;
+    $reservation = Reservation::findOrFail($reservation_id);
+
+    #dd($reservation->dropOffAddress->type);
+
+
+    $file_name = 'BookingConfirmation'.$reservation_id.'.pdf';
+
+    switch ($type){
+        case 'booking-confirmation':
+            $view = 'attachments.booking_confirmation';
+            break;
+        case 'booking-cancellation':
+            $view = 'attachments.booking_cancellation';
+            $file_name = 'BookingCancellation'.$reservation_id.'.pdf';
+            break;
+        case 'booking-cancellation-fee':
+            $view = 'attachments.booking_cancellation_fee';
+            $file_name = 'BookingCancellationFee'.$reservation_id.'.pdf';
+            break;
+        case 'download-voucher':
+            $view = 'attachments.voucher';
+            $file_name = 'BookingVoucher_'.$reservation_id.'.pdf';
     }
 
-    if($reservation->isRoundTrip && $reservation->status == 'cancelled' && $reservation->returnReservation->status == 'confirmed'){
-        $price = $reservation->returnReservation->price;
-    }
+     return \Barryvdh\DomPDF\Facade\Pdf::loadView($view, ['reservation'=> $reservation],array(),'utf-8')->setPaper('A4', 'portrait')->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->stream();
 
-
-    $amount = number_format($price/100,2,'.','');
-
-    dd($amount);
 });
 
 // Prefixed admin routes. There is no difference other than /admin/ prefix in url

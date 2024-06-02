@@ -26,9 +26,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
             | User routes
             |--------------------------------------------------------------------------
         */
-        include 'role-reportagent.php';
+       include 'role-reportagent.php';
 
-        include 'role-user.php';
+       include 'role-user.php';
 
         Route::middleware(
             ['role:' .User::ROLE_RECEPTION .'|' .User::ROLE_SUPER_ADMIN . '|' . User::ROLE_ADMIN]
@@ -38,14 +38,14 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
                 | Reception routes
                 |--------------------------------------------------------------------------
             */
-            include 'role-reception.php';
+           include 'role-reception.php';
         });
 
 
 
 
         Route::middleware(
-            ['role:' . User::ROLE_SUPER_ADMIN . '|' . User::ROLE_ADMIN]
+            ['role:' . User::ROLE_SUPER_ADMIN . '|' . User::ROLE_ADMIN.'|'.User::ROLE_REPORTAGENT]
         )->group(function () {
             /*
                 |--------------------------------------------------------------------------

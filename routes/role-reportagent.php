@@ -18,6 +18,8 @@ use App\Http\Livewire\AgentEfficiency;
     |
     |  - REPORTAGENT
 */
+
+
 Route::get('/', Dashboard::class)->name('dashboard');
 Route::get('/partner-report', DestinationReport::class)->name('partner-report');
 Route::get('/ppom-report', DestinationReport::class)->name('ppom-report');

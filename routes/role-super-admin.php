@@ -8,6 +8,7 @@ use App\Http\Livewire\CompanyOverview;
 use App\Http\Livewire\DevMailPreview;
 use App\Http\Livewire\LanguageOverview;
 use App\Mail\Guest\ReservationCancellationMail;
+use App\Models\Traveller;
 use App\Services\Api\ValamarFiskalizacija;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
@@ -34,9 +35,38 @@ Route::get('activity-log-dashboard', ActivityLogDashboard::class)->name('activit
 
 Route::get('/test', function () {
 
-//    $res = Reservation::findOrFail(487);
-//
-//    $res->saveConfirmationDocument();
+
+    #886 -1
+    #903 - 2
+    #roundtrip cancelled - 884
+    #one way cancelled - 879
+    #mix cancellation roundtrip
+    $reservation_id = 882;
+
+    $type = 'booking-cancellation-fee';
+
+    $reservation = Reservation::findOrFail($reservation_id);
+
+    App::setLocale('de');
+
+    switch ($type){
+        case 'booking-confirmation':
+            $view = 'attachments.booking_confirmation';
+            break;
+        case 'booking-cancellation':
+            $view = 'attachments.booking_cancellation';
+            $file_name = 'BookingCancellation'.$reservation_id.'.pdf';
+            break;
+        case 'booking-cancellation-fee':
+            $view = 'attachments.booking_cancellation_fee';
+            $file_name = 'BookingCancellationFee'.$reservation_id.'.pdf';
+            break;
+        case 'download-voucher':
+            $view = 'attachments.voucher';
+            $file_name = 'BookingVoucher_'.$reservation_id.'.pdf';
+    }
+    return \Barryvdh\DomPDF\Facade\Pdf::loadView($view, ['reservation'=> $reservation])->setPaper('A4', 'portrait')->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->stream();
+
 });
 
 Route::get('/dev-mail-preview', DevMailPreview::class)->name('dev-mail-preview');
