@@ -11,7 +11,7 @@ use WireUi\Traits\Actions;
 
 class ReservationDetails extends Component
 {
-    use Actions;
+use Actions;
 
     public Reservation|null $reservation;
     public Reservation|null $editReservation = null;
@@ -23,6 +23,7 @@ class ReservationDetails extends Component
     public bool $documentSyncModal = false;
     public bool $fiskalSyncModal = false;
     public bool $reservationStatusModal = false;
+    public bool $reservationHistoryModal = false;
 
     public array $syncLog;
 
@@ -105,6 +106,11 @@ class ReservationDetails extends Component
 
     public function openReservationStatusModal($id){
         $this->reservationStatusModal = true;
+        $this->reservation = Reservation::findOrFail($id);
+    }
+
+    public function openReservationHistoryModal($id){
+        $this->reservationHistoryModal = true;
         $this->reservation = Reservation::findOrFail($id);
     }
 

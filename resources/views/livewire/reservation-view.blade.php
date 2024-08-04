@@ -144,7 +144,7 @@
                     </tr>
                     <tr>
                         <td class="font-bold">Remark:</td>
-                        <td>{{$this->reservation->remark}}</td>
+                        <td><textarea rows="10" cols="55" readonly >{{$this->reservation->remark}}</textarea></td>
                     </tr>
                     </tbody>
                 </table>
@@ -362,6 +362,7 @@
     </div>
 
     @if($travellerModal)
+
         <x-modal.card wire:model="travellerModal" title="Update traveller data">
 
             <x-select
