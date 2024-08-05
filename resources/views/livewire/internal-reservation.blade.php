@@ -520,17 +520,14 @@
 
                         <x-input label="Reservation number **"
                                  wire:model="stepTwoFields.leadTraveller.reservationNumber"
-                                 readonly
                         ></x-input>
 
                         <x-input label="Reservation Opera ID **"
                                  wire:model="stepTwoFields.leadTraveller.reservationOperaID"
-                                 readonly
                         ></x-input>
 
                         <x-input label="Opera Confirmation Number **"
                                  wire:model="stepTwoFields.leadTraveller.reservationOperaConfirmation"
-                                 readonly
                         ></x-input>
                         <x-input label="Email"
                                  wire:model="stepTwoFields.leadTraveller.email"
@@ -555,7 +552,7 @@
                         />
 
                     </div>
-                    <small style="color:red">** These fields can only be populated via Pull Data, and not manually.</small>
+                    <small style="color:red">** These fields should be populated via Pull Data, and not manually.</small>
                 </x-card>
 
             </div>
@@ -920,6 +917,12 @@
     @if($reservationStatusModal)
         <x-modal.card wire:model="reservationStatusModal"  title="Reservation Save Breakdown #{{$this->reservationStatus->id}}">
             <livewire:show-reservation-status  :reservation="$this->reservationStatus"/>
+        </x-modal.card>
+    @endif
+
+    @if($reservationWarningModal)
+        <x-modal.card wire:model="reservationWarningModal"  title="Transfer Already Downloaded">
+            <livewire:show-reservation-warning :reservation="$this->duplicateBooking" />
         </x-modal.card>
     @endif
 </div>
