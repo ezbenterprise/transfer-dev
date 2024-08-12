@@ -48,8 +48,6 @@ class ValamarOperaApi{
 
     public function syncReservationWithOperaFull($reservation_id,$cf_only = false){
 
-
-
         $this->cf_only = $cf_only;
 
         $this->reservation = Reservation::findOrFail($reservation_id);
@@ -190,24 +188,7 @@ class ValamarOperaApi{
 
            $res_result = $api->getReservationList();
 
-            $res_opera_id = $this->reservation->lead_traveller?->reservation_opera_id;
-
            if(!empty($res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number])){
-
-               if($res_opera_id != $res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number]['OPERA']['RESV_NAME_ID']){
-
-
-                   $traveller = Traveller::findOrFail($this->reservation->GetLeadTravellerAttribute()->id);
-
-                   $traveller->reservation_opera_id = $res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number]['OPERA']['RESV_NAME_ID'];
-
-                   $traveller->save();
-
-                    $this->reservation->refresh();
-
-               }
-
-
                $this->resortPMSCode = $res_result[$this->reservation->getLeadTravellerAttribute()->reservation_number]['propertyOperaCode'];
                return true;
            }
@@ -591,7 +572,6 @@ class ValamarOperaApi{
             }
         }elseif($reservation->isRoundTrip()){
 
-
             $return = array();
 
             #If main reservation is triggered
@@ -653,6 +633,7 @@ class ValamarOperaApi{
                 }
 
                 if(!$this->cf_only){
+
                     #Round Trip Booking
                     $return[] = array(
                         #1 if booking is active - 0 if cancelled
@@ -729,7 +710,27 @@ class ValamarOperaApi{
      */
     private function buildPackageComment(\App\Models\Reservation $reservation) : string{
 
-        $return = 'Transfer:';
+
+
+        $pickup_address = Point::find($reservation->pickup_address_id);
+        $dropoff_address = Point::find($reservation->dropoff_address_id);
+
+        if($reservation->is_round_trip){
+            ##Address bug
+            $fa = $pickup_address;
+            $pickup_address = $dropoff_address;
+            $dropoff_address = $fa;
+        }
+
+        $prefix = 'IN# ';
+
+        if($pickup_address->type != 'airport'){
+            $prefix = 'OUT# ';
+        }
+
+
+
+        $return = $prefix.'Transfer:';
 
         #Pickup Time
         $return .= 'Time: '.Carbon::parse($reservation->date_time)->toTimeString('minute');
@@ -739,7 +740,7 @@ class ValamarOperaApi{
         $dropoff_location = Point::find($reservation->dropoff_location);
 
         #Route
-        $return .= ' From: '.$pickup_location->name.' To: '.$dropoff_location->name.' ';
+        $return .= ' From: '.$pickup_address->name.' To: '.$dropoff_address->name.' ';
 
         #Flight Number
         if($reservation->flight_number){
