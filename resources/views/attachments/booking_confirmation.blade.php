@@ -4,6 +4,13 @@
 
     $res_type = $reservation->isRoundTrip() ? '2' : '1';
 
+    if($res_type == 2){
+        if(!$reservation->isTotalRoundTrip()){
+            #RoundTrip with one booking cancelled
+            $res_type = 3;
+        }
+    }
+
     $locale_configuration = array(
         'hr' => array(
             1 => array(
@@ -13,6 +20,10 @@
             2 => array(
                 'footer-font-size' => 7,
                 'footer-upper-padding' => 37
+            ),
+            3 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 10
             )
         ),
         'en' => array(
@@ -23,6 +34,10 @@
             2 => array(
                 'footer-font-size' => 7,
                 'footer-upper-padding' => 37
+            ),
+            3 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 10
             )
         ),
         'de' => array(
@@ -33,6 +48,10 @@
             2 => array(
                 'footer-font-size' => 6,
                 'footer-upper-padding' => 3
+            ),
+            3 => array(
+                'footer-font-size' => 5,
+                'footer-upper-padding' => 25
             )
         ),
         'it' => array(
@@ -43,12 +62,74 @@
             2 => array(
                 'footer-font-size' => 6,
                 'footer-upper-padding' => 19
+            ),
+            3 => array(
+                'footer-font-size' => 5,
+                'footer-upper-padding' => 7
             )
         )
     );
 
-
-
+    if($reservation->destination->owner_id > 1){
+        $locale_configuration = array(
+            'hr' => array(
+                1 => array(
+                    'footer-font-size' => 7,
+                    'footer-upper-padding' => 10
+                ),
+                2 => array(
+                    'footer-font-size' => 5,
+                    'footer-upper-padding' => 10
+                ),
+                3 => array(
+                    'footer-font-size' => 4,
+                    'footer-upper-padding' => 5
+                )
+            ),
+            'en' => array(
+                1 => array(
+                    'footer-font-size' => 7,
+                    'footer-upper-padding' => 10
+                ),
+                2 => array(
+                    'footer-font-size' => 5,
+                    'footer-upper-padding' => 10
+                ),
+                3 => array(
+                    'footer-font-size' => 4,
+                    'footer-upper-padding' => 5
+                )
+            ),
+            'de' => array(
+                1 => array(
+                    'footer-font-size' => 6,
+                    'footer-upper-padding' => 10
+                ),
+                2 => array(
+                    'footer-font-size' => 5,
+                    'footer-upper-padding' => 10
+                ),
+                3 => array(
+                    'footer-font-size' => 4,
+                    'footer-upper-padding' => 5
+                )
+            ),
+            'it' => array(
+                1 => array(
+                    'footer-font-size' => 5,
+                    'footer-upper-padding' => 10
+                ),
+                2 => array(
+                    'footer-font-size' => 4,
+                    'footer-upper-padding' => 10
+                ),
+                3 => array(
+                    'footer-font-size' => 4,
+                    'footer-upper-padding' => 5
+                )
+            )
+        );
+    }
 ?>
 <x-mail.layouts.main>
 
@@ -71,7 +152,7 @@
     <x-mail.body>
 
         <x-mail.logo>
-            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:12px !important">
+            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:10px">
                 <p style="width: 100%">
                     {!! \App\Actions\Mail\GetMailHeaderAddressAndName::run($reservation) !!}
                     <br/>
@@ -105,7 +186,7 @@
                     <td style="border: 1px solid black;padding:5px 5px;" width="15%">{{__('mail.no')}}</td>
                     <td style="padding:5px 5px;border: 1px solid black;" width="8%">{{__('mail.code')}}</td>
                     <td style="padding:5px 5px;border: 1px solid black;" width="36%">{{__('mail.service_name')}}</td>
-                    <td style="padding:5px 5px;border: 1px solid black;text-align: right" width="40%">{{__('mail.total')}}</td>
+                    <td style="padding:5px 5px;border: 1px solid black;text-align: right" width="10%">{{__('mail.total')}}</td>
                 </tr>
                 </thead>
 
@@ -237,7 +318,7 @@
             <div class="" style="padding-top: 10px;"></div>
         </x-mail.footer>
         <x-mail.logo>
-            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:12px">
+            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:9px">
                 <p style="width: 100%">
                     {!! \App\Actions\Mail\GetMailHeaderAddressAndName::run($reservation) !!}
                     <br/>

@@ -23,20 +23,20 @@ class GetMailHeaderAddressAndName
                    <br/>
                    IBAN: HR4123600001101319202<br/>";
 
-                switch(app()->getLocale()){
-                    case 'it':
-                        $header .= "<i>Normativa sulla Privacy: https://www.valamar.com/it/normativa-sulla-privacy</i>";
-                        break;
-                    case 'en':
-                        $header .= "<i>Privacy policy: https://valamar.com/en/privacy-policy/</i>";
-                        break;
-                    case 'hr':
-                        $header .= "<i>Politika Privatnosti: https://www.valamar.com/hr/izjava-o-privatnosti</i>";
-                        break;
-                    case 'de':
-                        $header .= "<i>Datenschutzrichtlinie: https://www.valamar.com/de/datenschutz</i>";
-                        break;
-                }
+                  switch(app()->getLocale()){
+                        case 'it':
+                            $header .= "<i>Normativa sulla Privacy: https://www.valamar.com/it/normativa-sulla-privacy</i>";
+                            break;
+                      case 'en':
+                          $header .= "<i>Privacy policy: https://valamar.com/en/privacy-policy/</i>";
+                          break;
+                      case 'hr':
+                          $header .= "<i>Politika Privatnosti: https://www.valamar.com/hr/izjava-o-privatnosti</i>";
+                          break;
+                      case 'de':
+                          $header .= "<i>Datenschutzrichtlinie: https://www.valamar.com/de/datenschutz</i>";
+                          break;
+                  }
 
                 break;
             case 2:
@@ -44,7 +44,6 @@ class GetMailHeaderAddressAndName
                 $header = "Valamar Riviera d.d<br/>
                     Stancija Kaligari 1<br/>
                     Poreč, Republika Hrvatska<br/>
-                   <br/>
                    OIB: 36201212847
                    <br/>
                    <i>On behalf of and for the account</i><br/>
