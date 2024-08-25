@@ -6,11 +6,11 @@ $res_type = 1;
 
 $locale_configuration = array(
     'hr' => array(
-        1 => array(
-            'footer-font-size' => 7,
-            'footer-upper-padding' => 65
+            1 => array(
+                'footer-font-size' => 7,
+                'footer-upper-padding' => 65
+            ),
         ),
-    ),
     'en' => array(
         1 => array(
             'footer-font-size' => 7,
@@ -30,6 +30,37 @@ $locale_configuration = array(
         )
     )
 );
+
+
+if($reservation->destination->owner_id > 1){
+
+    $locale_configuration = array(
+        'hr' => array(
+            1 => array(
+                'footer-font-size' => 5,
+                'footer-upper-padding' => 50
+            ),
+        ),
+        'en' => array(
+            1 => array(
+                'footer-font-size' => 5,
+                'footer-upper-padding' => 50
+            )
+        ),
+        'de' => array(
+            1 => array(
+                'footer-font-size' => 5,
+                'footer-upper-padding' => 50
+            )
+        ),
+        'it' => array(
+            1 => array(
+                'footer-font-size' => 5,
+                'footer-upper-padding' => 30
+            )
+        )
+        );
+}
 ?>
 <x-mail.layouts.main>
 
@@ -52,7 +83,7 @@ $locale_configuration = array(
     <x-mail.body>
 
         <x-mail.logo>
-            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:12px">
+            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:10px">
                 <p style="width: 100%">
                     {!! \App\Actions\Mail\GetMailHeaderAddressAndName::run($reservation) !!}
                     <br/>
@@ -95,16 +126,16 @@ $locale_configuration = array(
                 @foreach($reservation->getCancellationFeeItemBreakDown('items') as $pbItem)
 
 
-                    <tr style="border: 1px solid black;">
-                        <td style="padding:5px 5px;border: 1px solid black;">{{$loop->index + 1}}.</td>
+                        <tr style="border: 1px solid black;">
+                            <td style="padding:5px 5px;border: 1px solid black;">{{$loop->index + 1}}.</td>
 
-                        <td style="padding:5px 5px;border: 1px solid black;">
-                            {{Arr::get($pbItem,'code')}}
-                        </td>
-                        <td style="padding:5px 5px;border: 1px solid black;">{{Arr::get($pbItem,'transfer')}}</td>
-                        <td style="padding:5px 5px;border: 1px solid black;text-align: right">
-                            <b>{{Arr::get($pbItem,'price')}}</b></td>
-                    </tr>
+                            <td style="padding:5px 5px;border: 1px solid black;">
+                                {{Arr::get($pbItem,'code')}}
+                            </td>
+                            <td style="padding:5px 5px;border: 1px solid black;">{{Arr::get($pbItem,'transfer')}}</td>
+                            <td style="padding:5px 5px;border: 1px solid black;text-align: right">
+                                <b>{{Arr::get($pbItem,'price')}}</b></td>
+                        </tr>
 
                 @endforeach
 
@@ -210,7 +241,7 @@ $locale_configuration = array(
             <div class="" style="padding-top: 10px;"></div>
         </x-mail.footer>
         <x-mail.logo>
-            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:12px">
+            <div class="" style="padding: 3px 25px 0 0; text-align: right ;width: 100%;font-size:10px">
                 <p style="width: 100%">
                     {!! \App\Actions\Mail\GetMailHeaderAddressAndName::run($reservation) !!}
                     <br/>
