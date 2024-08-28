@@ -49,8 +49,7 @@ class TransferAvailability
             ->whereHas('partner')
             ->whereHas('transfer.vehicle', function ($q) {
                 $q->where('max_luggage', '>=', $this->luggage)
-                    ->where('max_occ', '>=', $this->getTotalNumOfPeople())
-                    ->where('destination_id','!=',16);
+                    ->where('max_occ', '>=', $this->getTotalNumOfPeople());
 
             })
             ->get()
@@ -60,7 +59,6 @@ class TransferAvailability
                 if($item->transfer->destination_id != 4){
                     return in_array($item->partner_id, $order) ? array_search($item->partner_id, $order) : 10   * (int) $item?->partner_id;
                 }
-
 
             });
 
