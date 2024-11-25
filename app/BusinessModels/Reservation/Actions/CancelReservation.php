@@ -31,7 +31,7 @@ class CancelReservation extends \App\BusinessModels\Reservation\Reservation
         }
     }
 
-    public function cancelReservation($cancellationdate = false,$cancellation_type = 'cancellation',$cancellation_fee = 0,$cancel_round_trip = false,$user_id = false)
+    public function cancelReservation($cancellationdate = false,$cancellation_type = 'cancellation',$cancellation_fee = 0,$cancel_round_trip = false,$user_id = false,$cancellation_reason = '')
     {
 
         $this->sendMail = true;
@@ -47,6 +47,7 @@ class CancelReservation extends \App\BusinessModels\Reservation\Reservation
         $this->model->cancellation_type = $cancellation_type;
         $this->model->cancellation_fee = $cancellation_fee;
         $this->model->cancelled_at = $cancellationdate;
+        $this->model->cancellation_reason = trim($cancellation_reason);
 
         if(!empty($user_id) && $user_id > 0){
             $this->model->updated_by = $user_id;

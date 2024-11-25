@@ -71,6 +71,7 @@
                     <p  class="text-sm font-bold" style="color:red"><u>{{$reservation->pickupLocation->name}} -> {{$reservation->dropoffLocation->name}} Cancellation Details #{{$reservation->id}}</u>
                     </p>
                     <p class="text-sm"><b>Cancellation DateTime: </b>{{$reservation->cancelled_at}}</p>
+                    <p class="text-sm"><b>Cancellation reason: </b><i>{{$reservation->cancellation_reason ? $reservation->cancellation_reason : 'No reason provided'}}</i></p>
                     @if($reservation->hasCancellationFee() > 0)
 
                         @if($reservation->included_in_accommodation_reservation != 1 && $reservation->v_level_reservation != 1)
@@ -105,6 +106,7 @@
                     <p  class="text-sm font-bold" style="color:red"><u>{{$reservation->returnReservation->pickupLocation->name}} -> {{$reservation->returnReservation->dropoffLocation->name}} Cancellation Details #{{$reservation->returnReservation->id}}</u>
                     </p>
                     <p class="text-sm"><b>Cancellation DateTime: </b>{{$reservation->returnReservation->cancelled_at}}</p>
+                    <p class="text-sm"><b>Cancellation reason: </b><i>{{$reservation->cancellation_reason ? $reservation->cancellation_reason : 'No reason provided'}}</i></p>
                     @if($reservation->returnReservation->hasCancellationFee() > 0)
 
 

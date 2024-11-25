@@ -142,6 +142,12 @@
                         <td class="font-bold">Flight number:</td>
                         <td>{{$this->reservation->flight_number}}</td>
                     </tr>
+                    @if($this->reservation->flight_pickup_time)
+                        <tr>
+                            <td class="font-bold">Flight Pickup Time:</td>
+                            <td>{{$this->reservation->flight_pickup_time}}</td>
+                        </tr>
+                    @endif
                     <tr>
                         <td class="font-bold">Remark:</td>
                         <td><textarea rows="10" cols="55" readonly >{{$this->reservation->remark}}</textarea></td>
@@ -362,7 +368,6 @@
     </div>
 
     @if($travellerModal)
-
         <x-modal.card wire:model="travellerModal" title="Update traveller data">
 
             <x-select

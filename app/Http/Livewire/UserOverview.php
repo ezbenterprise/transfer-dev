@@ -26,7 +26,7 @@ use Actions;
     protected function rules()
     {
         return [
-            'user.name' => 'required|min:3',
+            'user.name' => '',
             'user.email' => 'required|email|unique:users,email,'.$this->user->id,
             'user.owner_id' => 'required',
             'user.city' => '',

@@ -34,6 +34,7 @@ class CreateReservation extends Reservation
         array           $priceBreakdown,
         string          $remark='',
         string          $flightNumber ='',
+        Carbon        $flightPickupTime,
         array           $childSeats = [],
         int             $luggage = 0,
         int|string|null $pickupAddressId = null,
@@ -57,6 +58,7 @@ class CreateReservation extends Reservation
         $this->model->price = $price->getAmount();
         $this->model->child_seats =$childSeats;
         $this->model->flight_number = $flightNumber;
+        $this->model->flight_pickup_time = $flightPickupTime;
         $this->model->remark = $remark;
         $this->model->transfer_id = $transfer->id;
         $this->model->price_breakdown =  $priceBreakdown;
@@ -110,7 +112,7 @@ class CreateReservation extends Reservation
         $partnerOrder = new ReservationPartnerOrderCache($this->model->destination_id);
         $partnerOrder->cacheDestinationPartners();
 
-        //$this->model->saveConfirmationDocument();
+        $this->model->saveConfirmationDocument();
 
         return $this->model->id;
     }
@@ -137,6 +139,7 @@ class CreateReservation extends Reservation
         $roundTrip->dropoff_address = $this->model->pickup_address;
         $roundTrip->date_time = $this->returnDate;
         $roundTrip->flight_number = $this->returnFlightNumber;
+        $roundTrip->flight_pickup_time = $this->returnFlightPickupTime;
         $roundTrip->is_main = false;
 
         $roundTrip->save();
@@ -152,11 +155,12 @@ class CreateReservation extends Reservation
     }
 
 
-    public function setRoundTrip(Carbon $returnDateTime,string $flightNumber = '')
+    public function setRoundTrip(Carbon $returnDateTime,string $flightNumber = '',Carbon $returnFlightPickupTime)
     {
         $this->roundTrip = true;
         $this->returnDate = $returnDateTime;
         $this->returnFlightNumber = $flightNumber;
+        $this->returnFlightPickupTime = $returnFlightPickupTime;
     }
 
     public function addLeadTraveller(Traveller $traveller)

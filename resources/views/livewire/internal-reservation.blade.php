@@ -485,32 +485,50 @@
             <div class="mb-2">
 
                 <x-card title="Transfer details">
-                    <div class="grid grid-cols-3 gap-4">
 
+                    <div class="grid grid-rows-3 grid-cols-3 gap-4 p-4">
+                        <!-- First column, spanning 3 rows -->
                         <x-textarea
-                            label="Remark:"
-                            wire:model="stepTwoFields.remark"
-                        />
+                                label="Remark:"
+                                wire:model="stepTwoFields.remark"
+                            />
 
+                        <!-- Second row -->
                         <x-input wire:model="stepTwoFields.arrivalFlightNumber"
                                  label="Flight number {{$roundTrip?'#1':''}}"
                         ></x-input>
 
-                        @if($roundTrip)
-                            <x-input label="Flight number #2"
-                                     wire:model="stepTwoFields.departureFlightNumber"
-                            ></x-input>
-                        @endif
+                        <!-- Third row -->
+                        <x-flatpickr
+                            label="Arrival Flight Pickup Time:"
+                            :enable-date="false"
+                            :default-date="$this->stepOneFields['dateTime']"
+                            wire:model="stepTwoFields.arrivalFlightPickupTime"
+                        ></x-flatpickr>
                     </div>
+
+                    @if($roundTrip)
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-start-2 col-end-3">
+                                <x-input label="Flight number #2"
+                                         wire:model="stepTwoFields.departureFlightNumber"
+                                ></x-input>
+                            </div>
+
+                            <x-flatpickr
+                                label="Departure Flight Pickup Time:"
+                                :default-date="$this->stepOneFields['returnDateTime']"
+                                wire:model="stepTwoFields.departureFlightPickupTime"
+                            ></x-flatpickr>
+                        </div>
+                    @endif
+
 
                 </x-card>
             </div>
             <div class="mb-2">
                 <x-card title="Lead traveller details">
                     <div class="grid grid-cols-3 gap-4">
-
-
-
                         <x-input label="First name"
                                  wire:model="stepTwoFields.leadTraveller.firstName"
                         ></x-input>
@@ -874,7 +892,7 @@
                             <x-card>
                                 <x-toggle
                                     lg
-                                    wire:model.defer="stepTwoFields.vlevelrateplanReservation"
+                                    wire:model="stepTwoFields.vlevelrateplanReservation"
                                 label="V Level Rate Plan Reservation"
                                 ></x-toggle>
                             <hr class="my-4">
