@@ -1,3 +1,6 @@
+<?php
+use Carbon\Carbon;
+?>
 <x-mail.layouts.main>
 
     <x-slot name="head_after">
@@ -88,7 +91,7 @@
                     <p style="font-size: 14px"><b>{{__('mail.flight_number')}}:</b> {{$reservation->flight_number}}</p>
                 @endif
                 @if($reservation->flight_pickup_time)
-                    <p style="font-size: 14px"><b>{{__('mail.flight_pickup_time')}}:</b> {{$reservation->flight_pickup_time}}</p>
+                    <p style="font-size: 14px"><b>{{__('mail.flight_pickup_time')}}:</b> {{Carbon::parse($reservation->flight_pickup_time)->format('d.m.Y @ H:i')}}</p>
                 @endif
                 <p style="font-size: 14px"><b>{{__('mail.pickup_address')}}: </b> {{$reservation->pickup_address}}</p>
                 <p style="font-size: 14px"><b>{{__('mail.flight_time')}}: </b> {{$reservation->date_time->format('H:i')}}
@@ -127,9 +130,12 @@
 
                 <p style="font-size: 14px"><b>{{__('mail.pickup_date')}}
                         : </b> {{$reservation->returnReservation->date_time->format('d.m.Y')}}</p>
-                @if($reservation->flight_number)
+                @if($reservation->returnReservation->flight_number)
                     <p style="font-size: 14px"><b>{{__('mail.flight_number')}}
                             :</b> {{$reservation->returnReservation->flight_number}}</p>
+                @endif
+                @if($reservation->returnReservation->flight_pickup_time)
+                    <p style="font-size: 14px"><b>{{__('mail.flight_pickup_time')}}:</b> {{Carbon::parse($reservation->returnReservation->flight_pickup_time)->format('d.m.Y @ H:i')}}</p>
                 @endif
                 <p style="font-size: 14px"><b>{{__('mail.pickup_address')}}
                         : </b> {{$reservation->returnReservation->pickup_address}}</p>
