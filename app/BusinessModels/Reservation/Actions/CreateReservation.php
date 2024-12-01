@@ -90,7 +90,7 @@ class CreateReservation extends Reservation
             }
 
 
-            if($this->model->included_in_accommodation_reservation == 0 && $this->model->v_level_reservation == 0){
+            if($this->model->included_in_accommodation_reservation == 0){
                 #Send Reservation To Opera
                 $OperaAPI = new ValamarOperaApi();
                 $OperaAPI->syncReservationWithOperaFull($this->model->id);
@@ -112,7 +112,7 @@ class CreateReservation extends Reservation
         $partnerOrder = new ReservationPartnerOrderCache($this->model->destination_id);
         $partnerOrder->cacheDestinationPartners();
 
-        $this->model->saveConfirmationDocument();
+//        $this->model->saveConfirmationDocument();
 
         return $this->model->id;
     }

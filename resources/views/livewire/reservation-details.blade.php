@@ -22,7 +22,11 @@
                 <br/>
 
                 @if($reservation->included_in_accommodation_reservation == 1)
-                    <span class="font-extrabold text-info text-sm">Reservation included in Accommodation Reservation<br/><small><ul><li><i> - Reservation Not posted to Opera.</i>  </li></ul></small></span>
+                    <span class="font-extrabold text-info text-sm">Reservation included in Accommodation Reservation<br/><small>
+                    @if(!$reservation->isVLevelReservation())
+                                <ul><li><i> - Reservation Not posted to Opera.</i>  </li></ul></small></span>
+                    @endif
+
                     <!-- Invoice Details -->
                     @if($reservation->getInvoiceData('invoice_number') != '-')
                         <span class="font-extrabold text-info text-sm">Invoice: <span class="text-info font-normal">{{gmdate('Y').'-'.$reservation->getInvoiceData('invoice_number')}} ({{$reservation->getInvoiceData('amount')}})</span></span>
@@ -33,17 +37,23 @@
                     @if($reservation->getInvoiceData('invoice_number') == '-')
                         <x-button xs icon="external-link" wire:click="openFiskalSyncModal({{$reservation->id}})">Issue Invoice ( Fiskalizacija )</x-button>
                     @endif
+                @endif
 
-                @elseif($reservation->v_level_reservation == 1)
+                @if($reservation->v_level_reservation == 1)
                     <span class="font-extrabold text-info text-sm">V Level Rate Plan Reservation included in Accommodation Reservation<br/><small>
                             <ul>
-                                <li><i> - Reservation Not posted to Opera.</i><br/>
+                                <span class="font-extrabold text-info text-sm">Opera Status: {{$reservation->isSyncedWithOpera()?'Synced':'Not Synced'}}</span>
+                                    <x-button primary xs wire:click="openOperaSyncModal({{$reservation->id}})">{{$reservation->isSyncedWithOpera()?'Re-Sync':'Sync'}}</x-button>
+                                    <x-button xs icon="external-link" wire:click="openOperaSyncLogModal({{$reservation->id}})">View Sync Log</x-button>
+                                <br/>
                                     <i> - Reservation Invoice ( fiskalizacija popratnog dokumenta ) Not Created via Transfer App.</i></li>
                                     <li> - Connected document not sent to Opera</li>
                             </ul>
                         </small>
                     </span>
-                @else
+                @endif
+
+                @if($reservation->v_level_reservation == 0 && $reservation->included_in_accommodation_reservation == 0)
                     <span class="font-extrabold text-info text-sm">Opera Status: {{$reservation->isSyncedWithOpera()?'Synced':'Not Synced'}}</span>
                     <x-button primary xs wire:click="openOperaSyncModal({{$reservation->id}})">{{$reservation->isSyncedWithOpera()?'Re-Sync':'Sync'}}</x-button>
                     <x-button xs icon="external-link" wire:click="openOperaSyncLogModal({{$reservation->id}})">View Sync Log</x-button>
@@ -60,7 +70,6 @@
                             <x-button xs icon="external-link" wire:click="openFiskalSyncModal({{$reservation->id}})">Issue Invoice ( Fiskalizacija )</x-button>
                         @endif
                     @endif
-
                 @endif
 
                 #Main Direction

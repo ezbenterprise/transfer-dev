@@ -1,0 +1,1 @@
+git archive -o patch.zip 25d92f6 $(git diff --name-only 25d92f6^..25d92f6)

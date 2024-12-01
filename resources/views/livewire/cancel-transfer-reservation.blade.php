@@ -47,7 +47,11 @@
         <x-checkbox lg class="justify-end ml-auto" left-label="Cancel Round trip"
                     wire:model="cancelRoundTrip"/>
         @endif
+        <x-checkbox lg class="justify-end ml-auto" left-label="Late Cancellation"
+                    wire:model="lateCancellation"/>
     </div>
+
+
 
 
     <label style="font-size: 80%" primary class="flex justify-end">{{$infoMessage}}</label>

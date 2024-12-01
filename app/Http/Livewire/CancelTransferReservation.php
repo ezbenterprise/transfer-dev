@@ -34,6 +34,8 @@ use Actions;
     public $cfnDisabled = 1;
 
     public $cf_null = 0;
+
+    public $lateCancellation = 0;
     public $cancellationTypeOptions = array(
         'cancellation' => 'Cancel - Cancellation',
         'refund' => 'Cancel - Refund',
@@ -70,6 +72,10 @@ use Actions;
 
         $this->reservation->cf_null = $this->cf_null;
 
+        $this->reservation->late_cancellation = $this->lateCancellation == true ? 1 : 0;
+
+
+
         $cancelAction = new CancelReservation($this->reservation);
 
         $cancelAction->cancelReservation(
@@ -85,7 +91,7 @@ use Actions;
 
             if($this->reservation->is_main){
 
-                if($this->reservation->included_in_accommodation_reservation == 0 && $this->reservation->v_level_reservation == 0){
+                if($this->reservation->included_in_accommodation_reservation == 0){
                     $operaAPI->syncReservationWithOperaFull($this->reservation->id);
                 }elseif ($this->reservation->cf_null == 1){
                     $operaAPI->syncReservationWithOperaFull($this->reservation->id,true);
@@ -96,7 +102,7 @@ use Actions;
 
                 if($main_res){
 
-                    if($this->reservation->included_in_accommodation_reservation == 0 && $this->reservation->v_level_reservation == 0) {
+                    if($this->reservation->included_in_accommodation_reservation == 0) {
                         $operaAPI->syncReservationWithOperaFull($main_res->id);
                     }elseif ($main_res->cf_null == 1){
                         $operaAPI->syncReservationWithOperaFull($main_res->id,true);
