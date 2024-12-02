@@ -70,9 +70,19 @@ class TransferPriceCalculator
             return null;
         }
 
-        $price = Money::EUR(
-            $this->priceData->price
-        );
+        if($this->roundTrip){
+
+            $roundTripPrice = $this->priceData->price_round_trip/2;
+
+            $price = Money::EUR(
+                $roundTripPrice
+            );
+
+        }else{
+            $price = Money::EUR(
+                $this->priceData->price
+            );
+        }
 
         $this->breakdownArray[] = [
             'item' => 'transfer_price',

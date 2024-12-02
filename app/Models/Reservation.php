@@ -463,7 +463,10 @@ class Reservation extends Model
             ->get()->first();
 
 
-        $price = Money::EUR($route_transfer->price)->formatByDecimal();
+       # $price = Money::EUR($route_transfer->price)->formatByDecimal();
+
+        $price = Money::EUR($this->price)->formatByDecimal();
+
         $vat = $this->included_in_accommodation ? 0 : 25;
         $vat_amount = number_format($price*($vat/100),2);
 
@@ -477,6 +480,8 @@ class Reservation extends Model
           'vat_amount' => $vat_amount,
           'price' => $price
         );
+
+
 
         $return['items'][] = $item;
 
@@ -516,7 +521,10 @@ class Reservation extends Model
 
                 $returnOperaPackageID = $return_route_transfer->opera_package_id;
 
-                $price = Money::EUR($return_route_transfer->price)->formatByDecimal();
+                #$price = Money::EUR($return_route_transfer->price)->formatByDecimal();
+
+                $price =  Money::EUR($round_trip_reservation->price)->formatByDecimal();
+
                 $vat = $this->included_in_accommodation ? 0 : 25;
                 $vat_amount = number_format($price*($vat/100),2);
 
@@ -582,7 +590,6 @@ class Reservation extends Model
 
     public function saveConfirmationDocument(){
 
-        return true;
         $document_name = 'res_'.$this->id.'_booking_confirmation.pdf';
 
         PDF::loadView('attachments.booking_confirmation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
@@ -590,7 +597,6 @@ class Reservation extends Model
     }
     public function saveCancellationDocument(){
 
-        return true;
         $document_name = 'res_'.$this->id.'_booking_cancellation.pdf';
 
         PDF::loadView('attachments.booking_cancellation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
@@ -599,7 +605,6 @@ class Reservation extends Model
 
     public function saveModificationDocument(){
 
-        return true;
         $document_name = 'res_'.$this->id.'_booking_modification_'.time().'.pdf';
 
         PDF::loadView('attachments.booking_confirmation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);

@@ -715,7 +715,7 @@ class ValamarOperaApi{
         $pickup_address = Point::find($reservation->pickup_address_id);
         $dropoff_address = Point::find($reservation->dropoff_address_id);
 
-        if($reservation->is_round_trip){
+        if(!$reservation->is_round_trip){
             ##Address bug
             $fa = $pickup_address;
             $pickup_address = $dropoff_address;
@@ -727,8 +727,6 @@ class ValamarOperaApi{
         if($pickup_address->type != 'airport'){
             $prefix = 'OUT# ';
         }
-
-
 
         $return = $prefix.'Transfer:';
 
@@ -795,7 +793,7 @@ class ValamarOperaApi{
 
         }
 
-        $money = new Money($total,new Currency('EUR'));
+        $money = new Money($reservation->price,new Currency('EUR'));
 
         return number_format($money->getAmount()/100, 2, '.', '');
     }
