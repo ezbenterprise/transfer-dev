@@ -181,12 +181,12 @@ class CancelReservation extends \App\BusinessModels\Reservation\Reservation
             $main_booking->price = $priceHandler->getPrice()->getAmount();
             $main_booking->price_breakdown = $priceHandler->getPriceBreakdown();
 
-            #$main_booking->save();
-            $this->model->save();
+            $main_booking->save();
+            #$this->model->save();
 
         }else{
 
         }
-        
+
     }
 }
