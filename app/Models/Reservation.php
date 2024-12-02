@@ -589,7 +589,7 @@ class Reservation extends Model
 
     }
     public function saveCancellationDocument(){
-        
+
         return true;
         $document_name = 'res_'.$this->id.'_booking_cancellation.pdf';
 

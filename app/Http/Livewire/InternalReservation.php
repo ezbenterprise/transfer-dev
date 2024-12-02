@@ -140,11 +140,11 @@ class InternalReservation extends Component
             if(is_numeric($this->stepOneFields['pickupAddressId']) && Point::find($this->stepOneFields['pickupAddressId'])->type == Point::TYPE_AIRPORT ||
                 is_numeric($this->stepOneFields['dropoffAddressId']) && POINT::find($this->stepOneFields['dropoffAddressId'])->type == Point::TYPE_AIRPORT){
                 $rules['stepTwoFields.arrivalFlightNumber'] = 'required|string';
-                $rules['stepTwoFields.departureFlightPickupTime'] = 'required|string';
+                #$rules['stepTwoFields.departureFlightPickupTime'] = 'required|string';
                 $rules['stepTwoFields.arrivalFlightPickupTime'] = 'required|string';
             }else{
                 $rules['stepTwoFields.arrivalFlightNumber'] = 'nullable|string';
-                $rules['stepTwoFields.departureFlightPickupTime'] = 'nullable|string';
+               # $rules['stepTwoFields.departureFlightPickupTime'] = 'nullable|string';
                 $rules['stepTwoFields.arrivalFlightPickupTime'] = 'nullable|string';
             }
         }
