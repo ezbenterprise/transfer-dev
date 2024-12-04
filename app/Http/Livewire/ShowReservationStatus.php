@@ -18,9 +18,10 @@ use function Symfony\Component\String\b;
 
 class ShowReservationStatus extends Component
 {
-use Actions;
+    use Actions;
 
     public Reservation $reservation;
+    public bool $review = false;
 
     public function close()
     {
