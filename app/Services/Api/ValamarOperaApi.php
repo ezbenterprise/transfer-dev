@@ -12,6 +12,7 @@ use Exchanger\Exception\Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\App;
 use Cknow\Money\Money;
+use App\Services\Api\ValamarAlertApi;
 use Money\Currency;
 
 class ValamarOperaApi{
@@ -51,6 +52,16 @@ class ValamarOperaApi{
         $this->cf_only = $cf_only;
 
         $this->reservation = Reservation::findOrFail($reservation_id);
+
+        if($this->reservation->isVLevelReservation()){
+
+            $valamarAlertAPI = new ValamarAlertApi();
+            $valamarAlertAPI->setReservation($this->reservation);
+            $valamarAlertAPI->sendAlert();
+
+            return true;
+        }
+
 
         $this->validateReservationMapping();
 
