@@ -40,13 +40,30 @@
     <x-input  type="number" label="Cancellation Fee €" wire:model="cancellation_fee_nominal"></x-input>
     <br/>
 
-    <div class="flex justify-center my-4">
-        <x-checkbox lg class="justify-end" left-label="Send Cancellation Fee 0 to opera "
+    <div class="flex justify-center space-x-6 my-4 ">
+        <x-checkbox lg class="justify-end" left-label="Send Cancellation Fee 0 to opera"
                     wire:model="cf_null"/>
+        @php
+            $infoMessage2 = '';
+        @endphp
+
         @if($reservation->isRoundTrip())
-        <x-checkbox lg class="justify-end ml-auto" left-label="Cancel Round trip"
-                    wire:model="cancelRoundTrip"/>
-        @endif
+
+
+            @if($reservation->canCancelOneWay())
+                <x-checkbox md class="justify-end ml-auto" left-label="Cancel Round trip"
+                            wire:model="cancelRoundTrip"  />
+            @else
+                @php
+                    $this->cancelRoundTrip = true;
+                    $infoMessage2 = 'This reservation has a special price for round trip. One way cannot be cancelled.'
+                @endphp
+                <x-checkbox md class="justify-end ml-auto" left-label="Cancel Round trip"
+                            wire:model="cancelRoundTrip" disabled />
+            @endif
+
+            @endif
+
         <x-checkbox lg class="justify-end ml-auto" left-label="Late Cancellation"
                     wire:model="lateCancellation"/>
     </div>
@@ -55,6 +72,7 @@
 
 
     <label style="font-size: 80%" primary class="flex justify-end">{{$infoMessage}}</label>
+    <label style="font-size: 80%" primary class="flex justify-end danger">{{$infoMessage2}}</label>
     <br/>
 
     <div class="flex justify-end">

@@ -347,11 +347,12 @@ class ValamarAlertApi{
 
             $this->response = $response->json();
 
-
             if($this->response['Status'] != 'OK'){
 
                 $this->writeCommunicationLog(self::STATUS_ERROR);
-                $response->throw('An Error Has occurred');
+                if($this->request[self::FIELD_ACTION] != 'DEL'){
+                    $response->throw('An Error Has occurred');
+                }
             }else{
                 $this->writeCommunicationLog(self::STATUS_SUCCESS);
             }

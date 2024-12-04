@@ -230,7 +230,7 @@
                style="border-color: #136baa;"
                :class="{ 'ds-tab-active': tab === 'round-trip-reservation' }"
                x-on:click.prevent="tab = 'round-trip-reservation'" href="#">
-                @if(!$reservation->returnReservation->isCancelled())
+                @if(!$reservation->returnReservation->isCancelled() && $reservation->canCancelOneWay())
                     <x-button x-show="tab === 'round-trip-reservation'"
                               class=" absolute left-2"
                               icon="x"

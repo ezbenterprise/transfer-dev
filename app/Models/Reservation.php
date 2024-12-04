@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Casts\ModelCast;
 use App\Scopes\DestinationScope;
 use App\Services\Api\ValamarOperaApi;
+use App\Services\TransferPriceCalculator;
+
 use Carbon\Carbon;
 use Database\Seeders\TransferExtrasPriceSeeder;
 use FontLib\Table\Type\maxp;
@@ -78,6 +80,43 @@ class Reservation extends Model
     {
 
         return !empty($this->round_trip_id);
+    }
+
+    public function canCancelOneWay(){
+
+        $return = true;
+
+        $booking = $this;
+
+        if($this->is_main == 0){
+            $booking = \App\BusinessModels\Reservation\Reservation::where('round_trip_id',$this->id)->get()->first();
+        }
+
+        if($booking->isRoundTrip()){
+            #If both directions are confirmed
+            if(!$booking->isCancelled() && !$booking->returnReservation->isCancelled()){
+                ##One Way Transfer
+                $route = Route::query()
+                    ->where('destination_id', $booking->destination_id)
+                    ->where('starting_point_id', $booking->pickup_location)
+                    ->where('ending_point_id', $booking->dropoff_location)
+                    ->get()->first();
+
+                $route_transfer = \DB::table('route_transfer')
+                    ->where('route_id',$route->id)
+                    ->where('partner_id',$booking->partner_id)
+                    ->where('transfer_id',$booking->transfer_id)
+                    ->get()->first();
+
+
+                #If the current one way price is < than standard price
+                if($booking->price < $route_transfer->price){
+                    $return = false;
+                }
+            }
+        }
+
+        return $return;
     }
 
     public function isTotalRoundTrip(){
