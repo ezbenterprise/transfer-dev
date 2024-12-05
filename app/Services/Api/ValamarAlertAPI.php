@@ -38,12 +38,12 @@ class ValamarAlertApi{
     private $reservationOperaID;
 
     private $mandatoryFields = array(
-            self::FIELD_SYS_USER,
-            self::FIELD_SYS_PASS,
-            self::FIELD_RESORT,
-            self::FIELD_PMS_RESERVATION_ID,
-            self::FIELD_ALERT_TEXT,
-            self::FIELD_ACTION
+        self::FIELD_SYS_USER,
+        self::FIELD_SYS_PASS,
+        self::FIELD_RESORT,
+        self::FIELD_PMS_RESERVATION_ID,
+        self::FIELD_ALERT_TEXT,
+        self::FIELD_ACTION
     );
 
     function __construct(){
@@ -138,6 +138,7 @@ class ValamarAlertApi{
                 return false;
             }
         }else{
+
             #If both directions are confirmed
             if(!$this->reservation->isCancelled() && !$this->reservation->returnReservation->isCancelled()){
                 $message = $one_way_reservation_message.' (round trip)';
@@ -171,13 +172,12 @@ class ValamarAlertApi{
 
         if($this->isLocalEnvironment()){
             file_put_contents('vlevel_alert_log.txt',$this->buildLogText(),FILE_APPEND);
+            if($write_log){
+                $this->writeCommunicationLog(self::STATUS_SUCCESS);
+            }
         }else{
             $this->validateResponse(
                 Http::post($this->callURL,$this->request));
-        }
-
-        if($write_log){
-            $this->writeCommunicationLog(self::STATUS_SUCCESS);
         }
     }
 
