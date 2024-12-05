@@ -61,7 +61,8 @@ class Reservation extends Model
       'infants' => 'Dojenčad',
       'remark' => 'Popratni komentar',
       'flight_number' => 'Broj Leta',
-      'luggage' => 'Prtljaga'
+      'luggage' => 'Prtljaga',
+      'extras' => 'Dodaci ( baby chair )'
     );
 
     public function isCancelled(){

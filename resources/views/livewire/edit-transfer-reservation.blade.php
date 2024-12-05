@@ -48,6 +48,59 @@
         wire:model.defer="remark"
     />
 
+
+    <br/>
+                @if($this->available_extras->isNotEmpty())
+
+                    <table class="ds-table w-full">
+                        <!-- head -->
+                        <thead>
+                        <tr>
+                            <th>
+                                Select
+                            </th>
+                            <th>Extra Name</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                        @foreach($this->available_extras as $extra)
+
+                            <tr>
+                                <th>
+                                    <x-checkbox
+                                        lg
+                                        wire:model="reservation_extras.{{$extra->id}}"
+                                    />
+                                </th>
+                                <td>
+                                    <div class="flex items-center space-x-3">
+                                        <div class="ds-avatar">
+                                            <div class="ds-mask ds-mask-squircle w-12 h-12">
+                                                <img src="{{$extra->primaryImageUrl}}"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold"> {{$extra->name}}</div>
+                                            <div
+                                                class="text-sm opacity-50">{{Str::limit($extra->description,70)}}</div>
+                                        </div>
+                                    </div>
+
+
+                                </td>
+
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <x-input-alert type="info">In case of RoundTrip, extras settings will be automatically applied to both directions.</x-input-alert>
+                @else
+                    <x-input-alert type="warning">No extras for selected partner</x-input-alert>
+                @endif
+
+    <br/>
     <x-native-select
         label="Send Modify Email:"
         :options="[
@@ -58,9 +111,6 @@
         option-value="id"
         wire:model.defer="sendModifyMail"
     />
-
-
-
     <div class=" my-4">
         <x-button positive wire:click="confirmationDialog">
             Save
@@ -69,4 +119,5 @@
             Cancel
         </x-button>
     </div>
+
 </div>
