@@ -20,6 +20,9 @@ use Actions;
     public ?string $search = null;
     public ?string $bookingId = null;
     public ?string $pointId = null;
+    public $page = 1; // Current page number
+    public $perPage = 10; // Items per page
+    public $totalReservations = 0;
 
     public function mount(): void
     {
@@ -27,9 +30,24 @@ use Actions;
         $this->to = now()->endOfMonth();
     }
 
+
+    public function nextPage()
+    {
+        $this->page++;
+    }
+
+    public function previousPage()
+    {
+        if ($this->page > 1) {
+            $this->page--;
+        }
+    }
+
     public function getReservationsProperty(): array|\Illuminate\Database\Eloquent\Collection
     {
-        return Reservation::with(['leadTraveller','pickupLocation'])
+
+        $reservations =  Reservation::
+       with(['leadTraveller','pickupLocation'])
             ->when($this->partnerId,function ($q){
                 return $q->where('partner_id',$this->partnerId);
             })
@@ -66,9 +84,14 @@ use Actions;
                         });
                 });
             })
-            ->where('is_main',true)
+                ->where('is_main',true)
             ->orderBy('created_at','desc')
+            ->offset(($this->page - 1) * $this->perPage)
+            ->limit($this->perPage)
             ->get();
+
+        return $reservations;
+
     }
 
 
