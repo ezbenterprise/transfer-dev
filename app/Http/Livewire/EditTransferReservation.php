@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\BusinessModels\Reservation\Actions\UpdateReservation;
 use App\Events\ReservationWarningEvent;
 use App\Models\Extra;
+use App\Models\Point;
 use App\Models\Reservation;
 use App\Models\Route;
 use Carbon\Carbon;
@@ -19,6 +20,7 @@ class EditTransferReservation extends Component
 use Actions;
     public Reservation $reservation;
     public $sendModifyMail = 1;
+    public $guest_pick_up = '';
 
     public $date;
     public $adults;
@@ -29,8 +31,11 @@ use Actions;
     public $remark;
     public $available_extras;
     public $reservation_extras = array();
+    public $is_out_transfer = false;
 
     public $test = false;
+
+    protected $listeners = ['refreshEditTransfer' => 'refresh'];
 
     public function getSelectedExtrasProperty()
     {
@@ -42,8 +47,10 @@ use Actions;
 
     }
 
-    public function mount()
+    public function mount($reservation)
     {
+
+        $this->reservation = $reservation;
         $this->date = $this->reservation->date_time->format('d.m.Y H:i');
 
         $this->adults = $this->reservation->adults;
@@ -51,7 +58,19 @@ use Actions;
         $this->children = $this->reservation->children;
         $this->luggage = $this->reservation->luggage;
         $this->flight_number = $this->reservation->flight_number;
+        $this->guest_pick_up = Carbon::parse($this->reservation->flight_pickup_time)->format('d.m.Y H:i');
+
         $this->remark = $this->reservation->remark;
+
+        $start_point = Point::findOrFail($this->reservation->pickup_address_id);
+
+        if($this->reservation->is_main != 1){
+            $start_point = Point::findOrFail($this->reservation->dropoff_address_id);
+        }
+
+        if($start_point->type == "accommodation"){
+            $this->is_out_transfer = true;
+        }
 
         $this->loadPartnerExtras();
 
@@ -123,6 +142,7 @@ use Actions;
     public function save(): void
     {
 
+
         $this->validate($this->rules(),[],$this->fieldNames);
 
         $modify = array();
@@ -131,6 +151,18 @@ use Actions;
         $res_date = substr($this->reservation->date_time->toDateTimeString(),0,10);
         $save_date = \Carbon\Carbon::parse(substr($this->date,0,10))->format('Y-m-d');
         $save_time = substr($this->date,11,5);
+
+        $guest_pickup_time_difference = false;
+
+        if($this->is_out_transfer){
+            $res_flight_pickup_time = $this->reservation->flight_pickup_time;
+            $save_flight_pickup_time =  \Carbon\Carbon::parse(substr($this->guest_pick_up,0,10))->format('Y-m-d').' '.substr($this->guest_pick_up,11,5).':00';
+
+            if($res_flight_pickup_time != $save_flight_pickup_time){
+                $this->reservation->flight_pickup_time = $save_flight_pickup_time;
+                $guest_pickup_time_difference = true;
+            }
+        }
 
         $extras_difference = false;
         //$extras_difference = array_diff_key(,$this->getActiveReservationExtras());
@@ -176,6 +208,10 @@ use Actions;
             $modify[] = 'time';
         }
 
+        if($guest_pickup_time_difference){
+            $modify[] = 'guest_pickup_time';
+        }
+
         if($this->adults != $this->reservation->adults){
             $modify[] = 'adults';
             $this->reservation->adults = $this->adults;
@@ -218,7 +254,6 @@ use Actions;
             }
             $array['sent'] = 0;
             $array['updated_by'] = Auth::id();
-
             \DB::table('reservation_modification')->insert(
                 $array
             );
@@ -242,12 +277,16 @@ use Actions;
                 collect($this->getActiveReservationExtras())->keys()->toArray()))
                 ->setBreakdownLang($this->reservation->confirmation_language);
 
+
+
+
             #Delete Previously Saved
             DB::table('extra_reservation')->where('reservation_id',$this->reservation->id)->delete();
             #Add To New
             $this->reservation->extras()->saveMany($this->getSelectedExtrasProperty());
 
             $this->reservation->price_breakdown = $priceHandler->getPriceBreakdown();
+            $this->reservation->price = $priceHandler->getPrice()->getAmount();
 
             #Recalculate the price
             if($this->reservation->is_main == 1){
@@ -270,6 +309,7 @@ use Actions;
                         ->setBreakdownLang($this->reservation->returnReservation->confirmation_language);
 
                     $this->reservation->returnReservation->price_breakdown = $priceHandler->getPriceBreakdown();
+                    $this->reservation->returnReservation->price = $priceHandler->getPrice()->getAmount();
 
                     $this->reservation->returnReservation->save();
                 }
@@ -295,6 +335,7 @@ use Actions;
                     ->setBreakdownLang($main_reservation->confirmation_language);
 
                 $main_reservation->price_breakdown = $priceHandler->getPriceBreakdown();
+                $main_reservation->price = $priceHandler->getPrice()->getAmount();
 
                 $main_reservation->save();
 
@@ -333,7 +374,7 @@ use Actions;
         foreach($this->available_extras as $index => $extra){
             #Remove Paid Extras
             if($extra->partner->first()?->pivot->price > 0){
-                unset($this->available_extras[$index]);
+              //  unset($this->available_extras[$index]);
             }
         }
 
@@ -360,6 +401,13 @@ use Actions;
         }
 
         return $return;
+    }
+
+    public function refresh()
+    {
+        // Forcefully re-fetch the reservation or re-initialize as needed
+        $this->reservation = Reservation::findOrFail($this->reservation->id);
+        $this->render();
     }
 
     public function render()

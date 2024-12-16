@@ -10,6 +10,15 @@
         wire:model.defer.defer="date"
     ></x-flatpickr>
 
+    @if($this->is_out_transfer)
+        <div class="divider"></div>
+        <x-flatpickr
+            label="Guest Pick up:"
+            :default-date="$this->guest_pick_up"
+            wire:model.defer.defer="guest_pick_up"
+        ></x-flatpickr>
+    @endif
+
 
     <x-input :class="$reservation->isDirty('adults')?'border-success':''"
                           wire:model.defer="adults"
@@ -59,7 +68,8 @@
                             <th>
                                 Select
                             </th>
-                            <th>Extra Name</th>
+                            <th>Name</th>
+                            <th>Price</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -87,9 +97,9 @@
                                                 class="text-sm opacity-50">{{Str::limit($extra->description,70)}}</div>
                                         </div>
                                     </div>
-
-
                                 </td>
+
+                                <td>{{Cknow\Money\Money::EUR($extra->partner->first()?->pivot->price)}}</td>
 
                             </tr>
                         @endforeach

@@ -20,7 +20,7 @@ class CancelTransferReservation extends Component
 use Actions;
     public Reservation $reservation;
     public $cancellationDate;
-    public $cancellationReason = '';
+    public $cancellationReason = 'Otkaz Rezervacije';
     public String $displayPrice = '';
     public bool $cancelRoundTrip = false;
     public $cancellation_fee_percent = 0;
@@ -57,7 +57,7 @@ use Actions;
     protected function getRules(){
         $rules = [
             "cancellation_fee_percent" => 'required|integer|min:0|max:100',
-            "cancellationReason" => 'required|string|min:5|max:500'
+            "cancellationReason" => 'required|string|min:4|max:500'
             #"cancellation_fee_nominal" => 'required|numeric|min:1|max:'.(int)$this->reservation->getPrice()->formatByDecimal().'|regex:'. \App\Services\Helpers\EzMoney::MONEY_REGEX,
         ];
 
@@ -139,6 +139,11 @@ use Actions;
             case 'cancellation_fee_nominal':
                 $this->cancellation_fee_percent = number_format(($this->cancellation_fee_nominal*$reservationTotal->formatByDecimal())/100);
                 $this->cancellation_fee_nominal = number_format($this->cancellation_fee_nominal,2);
+                break;
+            case 'lateCancellation':
+                $this->cancellation_fee_percent = number_format(100);
+                $this->cancellationReason = 'Kasni Storno';
+                $this->cancellation_fee_nominal = number_format($reservationTotal->formatByDecimal());
                 break;
         }
 

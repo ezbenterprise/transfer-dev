@@ -62,7 +62,8 @@ class Reservation extends Model
       'remark' => 'Popratni komentar',
       'flight_number' => 'Broj Leta',
       'luggage' => 'Prtljaga',
-      'extras' => 'Dodaci ( baby chair )'
+      'extras' => 'Dodaci ( baby chair )',
+      'guest_pickup_time' => 'Vrijeme kupljenja gosta'
     );
 
     public function isCancelled(){
@@ -630,16 +631,17 @@ class Reservation extends Model
 
     public function saveConfirmationDocument(){
 
-        return true;
+		return true;
 
         $document_name = 'res_'.$this->id.'_booking_confirmation.pdf';
 
         PDF::loadView('attachments.booking_confirmation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
 
     }
+	
     public function saveCancellationDocument(){
-
-        return true;
+		
+		return true;
 
         $document_name = 'res_'.$this->id.'_booking_cancellation.pdf';
 
@@ -649,8 +651,8 @@ class Reservation extends Model
 
     public function saveModificationDocument(){
 
-        return true;
-
+		return true;
+		
         $document_name = 'res_'.$this->id.'_booking_modification_'.time().'.pdf';
 
         PDF::loadView('attachments.booking_confirmation', ['reservation'=>Reservation::find($this->id)])->save(storage_path().'/app/public/temp_pdf/'.$document_name);
@@ -1130,7 +1132,7 @@ class Reservation extends Model
 
             if($this->isRoundTrip() && $this->returnReservation->status == 'confirmed'){
 
-                $logs = \DB::table('reservation_modification')->where('reservation_id','=',$this->returnReservation)->get();
+                $logs = \DB::table('reservation_modification')->where('reservation_id','=',$this->returnReservation->id)->get();
 
                 if(!empty($logs)){
                     foreach($logs as $log){
@@ -1139,7 +1141,7 @@ class Reservation extends Model
                             $return = array();
                         }
 
-                        $return[$this->id][$log->updated_time]['modifications'] = array();
+                        $return[$this->returnReservation->id][$log->updated_time]['modifications'] = array();
 
                         if($log->updated_by == 1){
                             $user_update = 'Valamar';
@@ -1153,7 +1155,7 @@ class Reservation extends Model
 
                             if($value == 1 && $parameter != 'updated_by' && $parameter != 'sent'){
 
-                                if(isset($return[$this->id])){
+                                if(isset($return[$this->returnReservation->id])){
                                     if(!in_array(self::MOD_FIELD_TRANSLATIONS[$parameter],$return[$this->returnReservation->id][$log->updated_time]['modifications'])){
                                         $return[$this->returnReservation->id][$log->updated_time]['modifications'][] = self::MOD_FIELD_TRANSLATIONS[$parameter];
                                     }

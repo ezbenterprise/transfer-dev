@@ -1,3 +1,6 @@
+<?php
+use Carbon\Carbon;
+?>
 <div>
 
     <div class="ds-alert
@@ -144,8 +147,8 @@
                     </tr>
                     @if($this->reservation->flight_pickup_time)
                         <tr>
-                            <td class="font-bold">Flight Pickup Time:</td>
-                            <td>{{$this->reservation->flight_pickup_time}}</td>
+                            <td class="font-bold">Guest Pick up:</td>
+                            <td>{{Carbon::parse($this->reservation->flight_pickup_time)->format('d.m.Y @ H:i')}}</td>
                         </tr>
                     @endif
                     <tr>

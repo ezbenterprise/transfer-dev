@@ -38,12 +38,12 @@ class ValamarAlertApi{
     private $reservationOperaID;
 
     private $mandatoryFields = array(
-        self::FIELD_SYS_USER,
-        self::FIELD_SYS_PASS,
-        self::FIELD_RESORT,
-        self::FIELD_PMS_RESERVATION_ID,
-        self::FIELD_ALERT_TEXT,
-        self::FIELD_ACTION
+            self::FIELD_SYS_USER,
+            self::FIELD_SYS_PASS,
+            self::FIELD_RESORT,
+            self::FIELD_PMS_RESERVATION_ID,
+            self::FIELD_ALERT_TEXT,
+            self::FIELD_ACTION
     );
 
     function __construct(){
@@ -124,7 +124,7 @@ class ValamarAlertApi{
 
         $owner = Owner::findOrFail($destination->owner_id);
 
-        $cancellation_message = 'Gost je kasno otkazao uključeni transfer, ubaciti paket u rezervaciju - '.$owner->name.', '.$destination->name.' #ID: '.$this->reservation->id;
+        $cancellation_message = 'Gost je kasno otkazao uključeni transfer - '.$owner->name.', '.$destination->name.' #ID: '.$this->reservation->id.'.  Rezervacija je otkazana u Operi,te je primjenjen cancellation fee od 100% iznosa rezervacije transfera.';
 
         $one_way_reservation_message = 'Gost ima uključeni transfer, ubaciti paket u rezervaciju - '.$owner->name.', '.$destination->name.' #ID: '.$this->reservation->id;
 

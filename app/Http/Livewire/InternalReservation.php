@@ -121,15 +121,17 @@ class InternalReservation extends Component
             'stepTwoFields.includedInAccommodationReservation' => 'boolean',
             'stepTwoFields.vlevelrateplanReservation' => 'boolean',
             'stepTwoFields.confirmationLanguage' => 'required',
+           // 'stepTwoFields.arrivalFlightPickupTime' => 'required|date',
         ];
 
+/*
         if($this->roundTrip){
             if(is_numeric($this->stepOneFields['pickupAddressId']) && Point::find($this->stepOneFields['pickupAddressId'])->type == Point::TYPE_AIRPORT ||
                 is_numeric($this->stepOneFields['dropoffAddressId']) && POINT::find($this->stepOneFields['dropoffAddressId'])->type == Point::TYPE_AIRPORT){
                 $rules['stepTwoFields.arrivalFlightNumber'] = 'required|string';
                 $rules['stepTwoFields.departureFlightNumber'] = 'required|string';
-                $rules['stepTwoFields.departureFlightPickupTime'] = 'required|string';
-                $rules['stepTwoFields.arrivalFlightPickupTime'] = 'required|string';
+                $rules['stepTwoFields.arrivalFlightPickupTime'] = 'required|date';
+                $rules['stepTwoFields.departureFlightPickupTime'] = 'date|after_or_equal:stepTwoFields.arrivalFlightPickupTime';
             }else{
                 $rules['stepTwoFields.arrivalFlightNumber'] = 'nullable|string';
                 $rules['stepTwoFields.departureFlightNumber'] = 'nullable|string';
@@ -140,15 +142,13 @@ class InternalReservation extends Component
             if(is_numeric($this->stepOneFields['pickupAddressId']) && Point::find($this->stepOneFields['pickupAddressId'])->type == Point::TYPE_AIRPORT ||
                 is_numeric($this->stepOneFields['dropoffAddressId']) && POINT::find($this->stepOneFields['dropoffAddressId'])->type == Point::TYPE_AIRPORT){
                 $rules['stepTwoFields.arrivalFlightNumber'] = 'required|string';
-                #$rules['stepTwoFields.departureFlightPickupTime'] = 'required|string';
-                $rules['stepTwoFields.arrivalFlightPickupTime'] = 'required|string';
+                $rules['stepTwoFields.arrivalFlightPickupTime'] = 'required|date';
             }else{
                 $rules['stepTwoFields.arrivalFlightNumber'] = 'nullable|string';
-               # $rules['stepTwoFields.departureFlightPickupTime'] = 'nullable|string';
                 $rules['stepTwoFields.arrivalFlightPickupTime'] = 'nullable|string';
             }
         }
-
+*/
         if ($this->activateOtherTravellersInput) {
             $rules['stepTwoFields.otherTravellers'] = 'array';
             $rules['stepTwoFields.otherTravellers.*.firstName'] = 'required|string';
@@ -187,8 +187,8 @@ class InternalReservation extends Component
         ],
         'includedInAccommodationReservation' => false,
         'vlevelrateplanReservation' => false,
-        'arrivalFlightPickupTime' => '',
-        'departureFlightPickupTime' => '',
+        'arrivalFlightPickupTime' => null,
+        'departureFlightPickupTime' => null,
     ];
 
 
@@ -394,7 +394,6 @@ class InternalReservation extends Component
     public function updated($property)
     {
 
-
         $this->validateOnly($property, array_merge($this->stepOneRules(), $this->stepTwoRules()), [], $this->fieldNames);
 
 
@@ -454,6 +453,7 @@ class InternalReservation extends Component
 
             }
         }
+
     }
 
     public function resetAdresses()
@@ -598,7 +598,7 @@ class InternalReservation extends Component
 
                     $reservation = Reservation::find($res_id);
 
-                    if(!empty($reservation)){
+                    if(!empty($reservation) && ($reservation->status != 'cancelled')){
                         $this->duplicateBooking = $reservation;
                         $this->openWarningModal();
                     }
